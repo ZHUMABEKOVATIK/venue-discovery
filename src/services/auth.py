@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, timezone
-from uuid import UUID
 
 from src.repositories.user import UserRepository
 from src.repositories.refresh_token import RefreshTokenRepository
@@ -18,13 +17,12 @@ class AuthService:
 
     async def register(self, payload: RegisterRequest) -> TokenResponse:
         already_exists = await self.user_repo.is_exists(
-            username=payload.username, email=payload.email
+            email=payload.email
         )
         if already_exists:
             raise BadRequestException("username или email уже занят")
 
         user = User(
-            username=payload.username,
             email=payload.email,
             hashed_password=hash_password(payload.password),
             display_name=payload.display_name,
@@ -36,7 +34,7 @@ class AuthService:
         user = await self.user_repo.get_one(email=payload.login)
         if user is None:
             user = await self.user_repo.get_one(username=payload.login)
-        if user is None or not verify_password(payload.password, user.hashed_password):
+        if user is None or not verify_password(payload.password, user.hashed_pw):
             raise BadRequestException("неверный логин или пароль")
 
         return await self._issue_tokens(user.id)
@@ -58,7 +56,7 @@ class AuthService:
         if stored is not None:
             await self.token_repo.revoke(stored)
 
-    async def _issue_tokens(self, user_id: UUID) -> TokenResponse:
+    async def _issue_tokens(self, user_id: int) -> TokenResponse:
         access = create_access_token(data={"sub": str(user_id)})
         refresh = create_refresh_token(data={"sub": str(user_id)})
 
