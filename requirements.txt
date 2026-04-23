@@ -1,0 +1,5 @@
+fastapi
+sqlalchemy
+argon2-cffi
+psycopg2==2.9.12
+python-jose

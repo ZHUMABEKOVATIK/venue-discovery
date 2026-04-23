@@ -9,7 +9,11 @@ class Settings(BaseSettings):
     
     @property
     def DB_URL(self):
-        return f"postgresql+asyncpg://{self.DB_NAME}:{self.DB_USERNAME}@{self.DB_HOST}/{self.DB_PASSWORD}"
+        return f"postgresql+asyncpg://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_HOST}/{self.DB_NAME}"
+    
+    @property
+    def DB_URL_PSYCOPG2(self):
+        return f"postgresql+psycopg2://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_HOST}/{self.DB_NAME}"
 
     SECRET_KEY: str
     SECRET_KEY_ACCESS: str

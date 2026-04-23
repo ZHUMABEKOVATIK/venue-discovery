@@ -1,9 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy import func, DateTime
+from sqlalchemy import func, DateTime, BigInteger
 from datetime import datetime
-
-import uuid
 
 class Base(AsyncAttrs, DeclarativeBase):
     pass
@@ -11,7 +9,7 @@ class Base(AsyncAttrs, DeclarativeBase):
 class IDMixIn(Base):
     __abstract__ = True
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, index=True, default=uuid.uuid4)
+    id: Mapped[int] = mapped_column(BigInteger, autoincrement=True, primary_key=True, index=True)
 
 class TimeStampzMixIn(IDMixIn):
     __abstract__ = True
