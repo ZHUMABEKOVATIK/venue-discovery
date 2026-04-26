@@ -18,7 +18,7 @@ class ContactMessageService:
         return data
 
     async def get_by_id(self, id: int) -> ContactMessage:
-        data = await self.repo.get_one(id)
+        data = await self.repo.get_by_id(id)
         if data is None:
             raise NotFoundException("Message not found!")
         return data
