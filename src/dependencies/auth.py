@@ -31,7 +31,6 @@ async def get_current_user(
 
     return user
 
-
 def get_auth_service(session: AsyncSession = Depends(get_async_session)) -> AuthService:
     return AuthService(
         user_repo=UserRepository(session),
