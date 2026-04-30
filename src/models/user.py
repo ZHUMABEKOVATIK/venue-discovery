@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING
-from enum import Enum as PyEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Boolean, Enum as SQLEnum
 
@@ -7,11 +6,9 @@ from src.db.base import SoftDeleteMixIn
 
 if TYPE_CHECKING:
     from .venue import Venue
-
-class UserRole(PyEnum, str):
-    guest = "guest"
-    owner = "owner"
-    admin = "admin"
+    from .announcement import Announcement
+    from .visits import Visit
+    from .model_enums import UserRole
 
 class User(SoftDeleteMixIn):
     __tablename__ = "users"
@@ -24,3 +21,5 @@ class User(SoftDeleteMixIn):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     venues: Mapped[list["Venue"]] = relationship(back_populates="owner")
+    announcements: Mapped[list["Announcement"]] = relationship(back_populates="user")
+    visits: Mapped[list["Visit"]] = relationship(back_populates="user")

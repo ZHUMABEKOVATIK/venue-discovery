@@ -6,6 +6,7 @@ from src.db.base import IDMixIn
 
 if TYPE_CHECKING:
     from .advertising import Advertising
+    from .venue import Venue
 
 class Category(IDMixIn):
     __tablename__ = "categories"
@@ -16,3 +17,4 @@ class Category(IDMixIn):
     parent: Mapped["Category|None"] = relationship(remote_side="Category.id")
     children: Mapped[list["Category"]] = relationship(back_populates="parent")
     ads: Mapped[list["Advertising"]] = relationship(back_populates="category")
+    venues: Mapped[list["Venue"]] = relationship(foreign_keys="Venue.category_id", back_populates="category")

@@ -15,6 +15,24 @@ class BaseRepository(Generic[T]):
         await self.session.flush()
         return obj
     
+    async def update(self, id: int, **kwargs) -> T | None:
+        data = (
+            await self.session.execute(
+                select(self.model)
+                .where(self.model.id == id)
+            )
+        ).scalar_one_or_none()
+
+        if data is None:
+            return None
+
+        for key, value in kwargs.items():
+            if hasattr(data, key):
+                setattr(data, key, value)
+        
+        await self.session.flush()
+        return data
+    
     async def delete(self, obj: T) -> None:
         await self.session.delete(obj)
         await self.session.flush()
@@ -30,6 +48,25 @@ class BaseRepository(Generic[T]):
         )
     
 class SoftDeleteRepository(BaseRepository[T]):
+    async def update(self, id: int, **kwargs) -> T | None:
+        data = (
+            await self.session.execute(
+                select(self.model)
+                .where(self.model.id == id)
+                .where(self.model.is_deleted.is_(False))
+            )
+        ).scalar_one_or_none()
+
+        if data is None:
+            return None
+
+        for key, value in kwargs.items():
+            if hasattr(data, key):
+                setattr(data, key, value)
+        
+        await self.session.flush()
+        return data
+
     async def delete(self, obj: T) -> None:
         obj.is_deleted = True
         await self.session.flush()

@@ -11,7 +11,7 @@ class Feedback(SoftDeleteMixIn):
     __tablename__ = "feedbacks"
 
     venue_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("venues.id", ondelete="CASCADE"), nullable=False)
-    rating: Mapped[int] = mapped_column(Integer, server_default=0)
+    rating: Mapped[int] = mapped_column(Integer, nullable=False)
     review: Mapped[str] = mapped_column(String)
 
     venue: Mapped["Venue"] = relationship(back_populates="feedbacks")
