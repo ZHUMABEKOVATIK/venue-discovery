@@ -24,16 +24,15 @@ class AuthService:
 
         user = User(
             email=payload.email,
-            hashed_password=hash_password(payload.password),
-            display_name=payload.display_name,
+            hashed_pw=hash_password(payload.password),
+            first_name=payload.first_name,
+            last_name=payload.last_name
         )
         user = await self.user_repo.create(user)
         return await self._issue_tokens(user.id)
 
     async def login(self, payload: LoginRequest) -> TokenResponse:
         user = await self.user_repo.get_one(email=payload.login)
-        if user is None:
-            user = await self.user_repo.get_one(username=payload.login)
         if user is None or not verify_password(payload.password, user.hashed_pw):
             raise BadRequestException("неверный логин или пароль")
 

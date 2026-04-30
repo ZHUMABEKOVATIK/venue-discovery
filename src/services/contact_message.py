@@ -14,7 +14,7 @@ class ContactMessageService:
             name=payload.name,
             message=payload.message
         )
-        data = self.repo.create(msg)
+        data = await self.repo.create(msg)
         return data
 
     async def get_by_id(self, id: int) -> ContactMessage:
@@ -33,6 +33,8 @@ class ContactMessageService:
             raise NotFoundException("Message not found!")
         return data
     
-    async def delete(self, id: int) -> bool:
-        data = await self.repo.delete(id)
-        return data
+    async def delete(self, id: int) -> None:
+        data = await self.repo.get_by_id(id)
+        if data is None:
+            raise NotFoundException("Message not found")
+        await self.repo.delete(data)

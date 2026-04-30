@@ -6,10 +6,19 @@ class CategoryService:
     def __init__(self, repo: CategoryRepo):
         self.repo = repo
 
+    async def get_all(self) -> list[Category]:
+        return await self.repo.get_all()
+
     async def create(self, name: str) -> Category:
         return await self.repo.create(
             Category(name = name.strip())
         )
+    
+    async def update(self, id: int, name) -> Category:
+        data = await self.repo.update(id, name=name)
+        if data is None:
+            raise NotFoundException(f"Category with id {id} not found")
+        return data
     
     async def delete(self, id: int) -> None:
         obj = await self.repo.get_by_id(id)
@@ -20,6 +29,9 @@ class CategoryService:
 class SubCategoryService:
     def __init__(self, repo: SubCategoryRepo):
         self.repo = repo
+
+    async def get_all(self, parent_id: int) -> list[Category]:
+        return await self.repo.get_all(parent_id)
 
     async def create(self, name: str, parent_id: int) -> Category:
         parent = await self.repo.parent_exists(parent_id)
@@ -33,6 +45,12 @@ class SubCategoryService:
                 parent_id = parent_id
             )
         )
+    
+    async def update(self, id: int, name) -> Category:
+        data = await self.repo.update(id, name=name)
+        if data is None:
+            raise NotFoundException(f"Category with id {id} not found")
+        return data
     
     async def delete(self, id: int) -> None:
         obj = await self.repo.get_by_id(id)

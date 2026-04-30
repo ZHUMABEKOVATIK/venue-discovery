@@ -24,6 +24,6 @@ class UnauthorizedException(HTTPException):
 class AlreadyExistsException(HTTPException):
     def __init__(self, detail: str = "Already taken!"):
         super().__init__(
-            status_code = status.HTTP_422_UNPROCESSABLE_CONTENT,
+            status_code=status.HTTP_409_CONFLICT,
             detail = detail
         )

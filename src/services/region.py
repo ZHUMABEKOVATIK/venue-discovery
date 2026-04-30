@@ -13,10 +13,10 @@ class RegionService:
         return await self.repo.get_all()
     
     async def update(self, id: int, name: str) -> Region:
-        return await self.repo.update(
-            id=id,
-            name=name
-        )
+        data = await self.repo.update(id=id, name=name)
+        if data is None:
+            raise NotFoundException("Region not found")
+        return data
     
     async def delete(self, id: int) -> None:
         data = await self.repo.get_by_id(id)

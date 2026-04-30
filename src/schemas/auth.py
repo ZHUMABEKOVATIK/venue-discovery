@@ -1,10 +1,10 @@
 from pydantic import BaseModel, field_validator, EmailStr
-import re
 
 class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
-    display_name: str | None = None
+    first_name: str
+    last_name: str
 
     @field_validator("password")
     @classmethod
