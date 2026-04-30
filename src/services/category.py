@@ -46,7 +46,7 @@ class SubCategoryService:
             )
         )
     
-    async def update(self, id: int, name) -> Category:
+    async def update(self, id: int, name: str) -> Category:
         data = await self.repo.update(id, name=name)
         if data is None:
             raise NotFoundException(f"Category with id {id} not found")

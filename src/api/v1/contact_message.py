@@ -15,7 +15,7 @@ async def get_messages(
         limit: int | None = Query(None), 
         offset: int | None = Query(None)
     ) -> list[ContactMessageOut]:
-    pass
+    return await service.get_all(limit=limit, offset=offset)
     
 @router.get("/{id}")
 async def get_one_message(
@@ -23,22 +23,22 @@ async def get_one_message(
         admin: AdminDep, 
         service: ContactMessageServiceDep
     ):
-    pass
+    return await service.get_by_id(id)
     
 @router.post("/")
 async def create_message(
         payload: ContactMessageIn,
         service: ContactMessageServiceDep
     ) -> ContactMessageOut:
-    pass
+    return await service.create(payload)
 
-@router.patch("/{id}")
+@router.patch("/read/{id}", description="Xabar oqildi dep qaldiriw")
 async def read_message(
         id: int,
         admin: AdminDep, 
         service: ContactMessageServiceDep
     ):
-    pass
+    return await service.read(id)
 
 @router.delete("/{id}")
 async def delete_message(
@@ -46,4 +46,4 @@ async def delete_message(
         admin: AdminDep, 
         service: ContactMessageServiceDep
     ):
-    pass
+    await service.delete(id)

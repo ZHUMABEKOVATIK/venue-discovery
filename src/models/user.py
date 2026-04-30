@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from .visits import Visit
     from .model_enums import UserRole
     from .feedback import Feedback
+    from .refresh import RefreshToken
 
 class User(SoftDeleteMixIn):
     __tablename__ = "users"
@@ -25,3 +26,4 @@ class User(SoftDeleteMixIn):
     announcements: Mapped[list["Announcement"]] = relationship(back_populates="user")
     visits: Mapped[list["Visit"]] = relationship(back_populates="user")
     feedbacks: Mapped[list["Feedback"]] = relationship(back_populates="user")
+    refresh_tokens: Mapped[list["RefreshToken"]] = relationship(back_populates="user")

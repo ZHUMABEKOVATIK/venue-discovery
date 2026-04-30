@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from .category import Category
     from .feedback import Feedback
     from .visits import Visit
+    from .venue_photos import VenuePhotos
 
 class Venue(SoftDeleteMixIn):
     __tablename__ = "venues"
@@ -61,3 +62,4 @@ class Venue(SoftDeleteMixIn):
     subcategory: Mapped["Category"] = relationship(foreign_keys=[subcategory_id])
     feedbacks: Mapped[list["Feedback"]] = relationship(back_populates="venue")
     visits: Mapped[list["Visit"]] = relationship(back_populates="venue")
+    photos: Mapped[list["VenuePhotos"]] = relationship(back_populates="photos")

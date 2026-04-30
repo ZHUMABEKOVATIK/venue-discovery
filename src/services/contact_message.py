@@ -23,8 +23,8 @@ class ContactMessageService:
             raise NotFoundException("Message not found!")
         return data
     
-    async def get_all(self) -> list[ContactMessage]:
-        data = await self.repo.get_all()
+    async def get_all(self, limit: int | None = None, offset: int | None = None, include_deleted: bool = False) -> list[ContactMessage]:
+        data = await self.repo.get_all(limit=limit, offset=offset, include_deleted=include_deleted)
         return data
     
     async def read(self, id: int) -> ContactMessage:

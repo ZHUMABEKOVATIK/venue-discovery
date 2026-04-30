@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 class ContactMessageIn(BaseModel):
     email: EmailStr
@@ -11,3 +11,5 @@ class ContactMessageOut(BaseModel):
     name: str
     message: str
     is_read: bool
+    
+    model_config = ConfigDict(from_attributes=True)
