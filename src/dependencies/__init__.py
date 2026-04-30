@@ -4,11 +4,14 @@ from fastapi import Depends
 from .auth import get_current_user, get_auth_service
 from .user import get_user_service
 from .contact_message import get_contact_message_service
+from .region import get_region_service
 
 from src.models.user import User, UserRole
+
 from src.services.user import UserService
 from src.services.auth import AuthService
 from src.services.contact_message import ContactMessageService
+from src.services.region import RegionService
 
 from src.core.exceptions import BadRequestException
 
@@ -22,3 +25,4 @@ CurrentUserDep = Annotated[User, Depends(get_current_user)]
 UserServiceDep = Annotated[UserService, Depends(get_user_service)]
 AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
 ContactMessageServiceDep = Annotated[ContactMessageService, Depends(get_contact_message_service)]
+RegionServiceDep = Annotated[RegionService, Depends(get_region_service)]

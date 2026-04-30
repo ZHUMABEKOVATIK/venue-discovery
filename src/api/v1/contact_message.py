@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Query
 from src.dependencies import AdminDep
-from src.models.user import UserRole
 from src.schemas.contact_message import ContactMessageIn, ContactMessageOut
 
 from src.core.exceptions import BadRequestException

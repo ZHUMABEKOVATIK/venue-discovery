@@ -40,7 +40,7 @@ class Venue(SoftDeleteMixIn):
     day_of_week: Mapped[int | None] = mapped_column(BigInteger)
     open_time: Mapped[str | None] = mapped_column(String(5))
     close_time: Mapped[str | None] = mapped_column(String(5))
-    is_24_7: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_always_open: Mapped[bool] = mapped_column(Boolean, default=False)
     is_closed: Mapped[bool] = mapped_column(Boolean, default=False)
     phone: Mapped[str | None] = mapped_column(String(20))
 
