@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String, Boolean, UUID, DateTime, func, BigInteger
+from sqlalchemy import ForeignKey, String, Boolean, DateTime, BigInteger
 
 from src.db.base import TimeStampzMixIn
 from typing import TYPE_CHECKING

@@ -6,7 +6,7 @@ class DataStatus(str, PyEnum):
     rejected = "rejected" 
     revision = "revision"
 
-class UserRole(PyEnum, str):
+class UserRole(str, PyEnum):
     guest = "guest"
     owner = "owner"
     admin = "admin"

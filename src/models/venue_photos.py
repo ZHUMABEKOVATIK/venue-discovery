@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, BigInteger, ForeignKey, Integer
+from sqlalchemy import String, BigInteger, ForeignKey
 
 from src.db.base import IDMixIn
 
