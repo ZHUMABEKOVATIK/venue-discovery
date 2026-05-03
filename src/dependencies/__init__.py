@@ -6,14 +6,19 @@ from .user import get_user_service
 from .contact_message import get_contact_message_service
 from .region import get_region_service
 from .category import get_category_service, get_subcategory_service
+from .feedback import get_feedback_service
 
 from src.models.user import User, UserRole
 
-from src.services.user import UserService
-from src.services.auth import AuthService
-from src.services.contact_message import ContactMessageService
-from src.services.region import RegionService
-from src.services.category import CategoryService, SubCategoryService
+from src.services import (
+    UserService, 
+    AuthService, 
+    ContactMessageService, 
+    RegionService, 
+    CategoryService, 
+    SubCategoryService, 
+    FeedbackService
+)
 
 from src.core.exceptions import BadRequestException
 
@@ -31,3 +36,4 @@ ContactMessageServiceDep = Annotated[ContactMessageService, Depends(get_contact_
 RegionServiceDep = Annotated[RegionService, Depends(get_region_service)]
 CategoryServiceDep = Annotated[CategoryService, Depends(get_category_service)]
 SubCategoryServiceDep = Annotated[SubCategoryService, Depends(get_subcategory_service)]
+FeedbackServiceDep = Annotated[FeedbackService, Depends(get_feedback_service)]
