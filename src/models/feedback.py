@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class Feedback(SoftDeleteMixIn):
     __tablename__ = "feedbacks"
 
-    venue_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("venues.id", ondelete="CASCADE"), nullable=False)
+    venue_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("venues.id", ondelete="CASCADE"))
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"))
     rating: Mapped[int] = mapped_column(Integer, nullable=False)
     review: Mapped[str] = mapped_column(String)
