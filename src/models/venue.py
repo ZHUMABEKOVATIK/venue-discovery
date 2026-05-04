@@ -48,7 +48,7 @@ class Venue(SoftDeleteMixIn):
     latitude: Mapped[float | None] = mapped_column(Numeric(9, 6))
     longitude: Mapped[float | None] = mapped_column(Numeric(9, 6))
 
-    status: Mapped[DataStatus] = mapped_column(SQLEnum(DataStatus, name="venue_status"), default=DataStatus.pending)
+    status: Mapped[DataStatus] = mapped_column(SQLEnum(DataStatus, name="venue_status"), default=DataStatus.new)
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     visit_amount: Mapped[int] = mapped_column(Integer, default=0)

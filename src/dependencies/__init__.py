@@ -7,6 +7,7 @@ from .contact_message import get_contact_message_service
 from .region import get_region_service
 from .category import get_category_service, get_subcategory_service
 from .feedback import get_feedback_service
+from .announcement import get_announcement_service
 
 from src.models.user import User, UserRole
 
@@ -17,7 +18,8 @@ from src.services import (
     RegionService, 
     CategoryService, 
     SubCategoryService, 
-    FeedbackService
+    FeedbackService,
+    AnnouncementService
 )
 
 from src.core.exceptions import BadRequestException
@@ -37,3 +39,4 @@ RegionServiceDep = Annotated[RegionService, Depends(get_region_service)]
 CategoryServiceDep = Annotated[CategoryService, Depends(get_category_service)]
 SubCategoryServiceDep = Annotated[SubCategoryService, Depends(get_subcategory_service)]
 FeedbackServiceDep = Annotated[FeedbackService, Depends(get_feedback_service)]
+AnnouncementServiceDep = Annotated[AnnouncementService, Depends(get_announcement_service)]

@@ -15,7 +15,7 @@ class Announcement(SoftDeleteMixIn):
     photo_url: Mapped[str] = mapped_column(String)
     value: Mapped[str] = mapped_column(String)
     description: Mapped[str | None] = mapped_column(String, nullable=True)
-    status: Mapped[DataStatus] = mapped_column(SQLEnum(DataStatus, name="announcement_status"), default=DataStatus.pending)
+    status: Mapped[DataStatus] = mapped_column(SQLEnum(DataStatus, name="announcement_status"), default=DataStatus.new)
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="announcements")

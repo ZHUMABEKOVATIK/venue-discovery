@@ -1,10 +1,10 @@
 from enum import Enum as PyEnum
 
 class DataStatus(str, PyEnum):
-    pending  = "pending"
-    approved = "approved"
-    rejected = "rejected" 
-    revision = "revision"
+    new  = "NEW"
+    approved = "APPROVED"
+    rejected = "REJECTED"
+    revision = "REVISION"
 
 class UserRole(str, PyEnum):
     guest = "guest"
