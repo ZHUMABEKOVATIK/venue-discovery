@@ -1,7 +1,7 @@
 from src.repositories.user import UserRepository
 from src.models.user import User
 from src.schemas.user import UserUpdateRequest
-from src.core.exceptions import NotFoundException
+from src.core import NotFoundException
 
 
 class UserService:

@@ -2,6 +2,8 @@ from fastapi import APIRouter, status, Query
 from src.dependencies import CurrentUserDep
 from src.schemas.feedback import FeedbackIn, FeedbackOut, FeedbackUpdateIn
 from src.dependencies import FeedbackServiceDep
+from src.models.model_enums import UserRole
+from src.core.exceptions import BadRequestException
 
 router = APIRouter(prefix="/feedback", tags=["Feedbacks"])
 
@@ -21,6 +23,9 @@ async def create(
         user: CurrentUserDep, 
         service: FeedbackServiceDep
     ):
+    if user.role == UserRole.owner:
+        raise BadRequestException("Siz feedback qaldira almaysiz")
+    
     return await service.create(
         venue_id=payload.venue_id,
         user_id=user.id,

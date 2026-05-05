@@ -1,6 +1,6 @@
 from src.repositories.advertising import AdvertisingRepo
 from src.models.advertising import Advertising
-from src.core.exceptions import NotFoundException
+from src.core import NotFoundException
 
 from fastapi import UploadFile
 

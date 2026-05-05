@@ -3,8 +3,11 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from .core import general_settings, life_span
 from .api import routers
+import os
 
 app = FastAPI(title="Waynix", version="0.1.1", lifespan=life_span)
+
+os.makedirs("media", exist_ok=True)
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
 app.include_router(routers)

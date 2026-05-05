@@ -24,6 +24,6 @@ class AnnouncementOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class AnnouncementGet(BaseModel):
-    only_approved: bool
-    offset: int
-    limit: int
+    only_approved: bool = False
+    offset: int | None = None
+    limit: int | None = None

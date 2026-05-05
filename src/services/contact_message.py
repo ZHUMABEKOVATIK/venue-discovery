@@ -1,7 +1,7 @@
 from src.repositories.contact_message import ContactMessageRepo
 from src.models.contact_message import ContactMessage
-from src.core.exceptions import NotFoundException
-from src.schemas.contact_message import ContactMessageIn, ContactMessageOut
+from src.core import NotFoundException
+from src.schemas.contact_message import ContactMessageIn
 
 
 class ContactMessageService:

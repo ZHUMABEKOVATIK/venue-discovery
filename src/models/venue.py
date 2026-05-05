@@ -62,4 +62,4 @@ class Venue(SoftDeleteMixIn):
     subcategory: Mapped["Category"] = relationship(foreign_keys=[subcategory_id])
     feedbacks: Mapped[list["Feedback"]] = relationship(back_populates="venue")
     visits: Mapped[list["Visit"]] = relationship(back_populates="venue")
-    photos: Mapped[list["VenuePhotos"]] = relationship(back_populates="photos")
+    photos: Mapped[list["VenuePhotos"]] = relationship(back_populates="venue")

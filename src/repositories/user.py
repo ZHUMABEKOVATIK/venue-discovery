@@ -10,7 +10,7 @@ class UserRepository:
 
     async def is_exists(self, email: str) -> bool:
         data = await self.session.scalar(
-            select(User.id).where(User.email == email)
+            select(User.id).where(User.email == email).where(User.is_deleted.is_(False))
         )
         return data is not None
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, status, File, Form
 from src.dependencies import AdminDep, AdvertisingServiceDep
 
-router = APIRouter(prefix="/advertising")
+router = APIRouter(prefix="/advertising", tags=["Advertising"])
 
 @router.get("/")
 async def get_all(
@@ -30,7 +30,7 @@ async def update_photo(
     return await service.update_photo(ad_id=advert_id, photo=photo)
 
 @router.put("/body/{advert_id}")
-async def update_photo(
+async def update_body(
         advert_id: int,
         user: AdminDep,
         service: AdvertisingServiceDep,

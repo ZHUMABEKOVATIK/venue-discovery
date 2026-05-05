@@ -1,6 +1,6 @@
 from src.repositories.announcement import AnnouncementRepo
 from src.models.announcement import Announcement
-from src.core.exceptions import NotFoundException, BadRequestException
+from src.core import NotFoundException, BadRequestException
 from src.models.model_enums import DataStatus
 
 from src.utils.file_handler import save_image, delete_image
@@ -57,8 +57,8 @@ class AnnouncementService:
         if data.user_id != user_id:
             raise BadRequestException("Sizge tiyisli bolmag'an anons")
         
-        if data.status == DataStatus.approved or data.status == DataStatus.rejected:
-            raise BadRequestException("Bul Anons qabillang'ansin yaki biykarlang'ansin o'zgermeydi")
+        if data.status == DataStatus.approved:
+            raise BadRequestException("Qabillang'an anonsti o'zgertiw mumkin emes")
         
         updates = {"status": DataStatus.revision}
         
@@ -79,10 +79,12 @@ class AnnouncementService:
     async def revision_announcement(self, annons_id: int, comment: str) -> Announcement: 
         return await self.repo.update(id=annons_id, status=DataStatus.revision, comment=comment)
     
-    async def delete(self, id: int) -> None:
+    async def delete(self, id: int, user_id: int) -> None:
         data = await self.repo.get_by_id(id=id)
         if data is None:
             raise NotFoundException("Announcement not found")
-        if data.is_deleted == True:
-            raise NotFoundException("Announcement not found")
+        
+        if data.user_id != user_id:
+            raise BadRequestException("Sizge tiyisli bolmag'an anons")
+        
         await self.repo.delete(data)

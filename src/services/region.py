@@ -1,6 +1,6 @@
 from src.repositories.region import RegionRepo
 from src.models.region import Region
-from src.core.exceptions import NotFoundException
+from src.core import NotFoundException
 
 class RegionService:
     def __init__(self, repo: RegionRepo):

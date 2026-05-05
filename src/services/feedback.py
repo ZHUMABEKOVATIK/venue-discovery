@@ -1,6 +1,6 @@
 from src.repositories.feedback import FeedbackRepo
 from src.models.feedback import Feedback
-from src.core.exceptions import BadRequestException, NotFoundException
+from src.core import BadRequestException, NotFoundException
 
 class FeedbackService:
     def __init__(self, repo: FeedbackRepo):
