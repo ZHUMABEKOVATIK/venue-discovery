@@ -1,5 +1,6 @@
-fastapi
-sqlalchemy
-argon2-cffi
+fastapi==0.121.1
+sqlalchemy==2.0.44
+argon2-cffi==25.1.0
 psycopg2==2.9.12
-python-jose
+python-jose==3.5.0
+qrcode==8.2

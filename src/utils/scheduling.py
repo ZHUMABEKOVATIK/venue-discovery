@@ -1,6 +1,8 @@
 BITMASK = [1, 2, 4, 8, 16, 32, 64]
 
 def days_to_int(days: list[int]) -> int:
+    if any(d < 1 or d > 7 for d in days):
+        raise ValueError("Days must be between 1 and 7")
     return sum([BITMASK[day-1] for day in days])
 
 def int_to_days(value: int) -> list[int]:

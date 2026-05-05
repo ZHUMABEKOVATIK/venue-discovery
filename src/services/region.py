@@ -21,5 +21,5 @@ class RegionService:
     async def delete(self, id: int) -> None:
         data = await self.repo.get_by_id(id)
         if data is None:
-            raise NotFoundException("Region not found!")
+            raise NotFoundException("Region not found")
         await self.repo.delete(data)
