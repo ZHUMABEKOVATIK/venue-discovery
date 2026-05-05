@@ -45,7 +45,7 @@ async def update_photo(
         annons_id: int,
         user: CurrentUserDep,
         service: AnnouncementServiceDep,
-        photo: UploadFile | None = File()
+        photo: UploadFile = File(...)
 ):
     return await service.update_photo(id=annons_id, user_id=user.id, photo=photo)
     

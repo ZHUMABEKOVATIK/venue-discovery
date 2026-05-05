@@ -5,3 +5,4 @@ from .region import RegionService
 from .category import CategoryService, SubCategoryService
 from .feedback import FeedbackService
 from .announcement import AnnouncementService
+from .advertising import AdvertisingService

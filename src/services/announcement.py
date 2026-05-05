@@ -44,6 +44,7 @@ class AnnouncementService:
         if data.user_id != user_id:
             raise BadRequestException("Sizge tiyisli bolmag'an anons")
         
+        delete_image(data.photo_url)
         photo_url = await save_image(photo, folder="announcements")
 
         return await self.repo.update(id, photo_url=photo_url)
