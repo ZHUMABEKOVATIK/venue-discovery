@@ -7,9 +7,10 @@ from fastapi.responses import StreamingResponse
 from src.repositories.venue import VenueRepo
 from src.repositories.visits import VisitRepo
 from src.models.venue import Venue
+from src.models.venue_photos import VenuePhotos
 from src.models.model_enums import DataStatus
 from src.schemas.venue import VenueIn, VenueUpdateIn, AdminReviewIn, QRScanResult
-from src.utils.file_handler import save_image
+from src.utils.file_handler import save_image, delete_image
 from src.utils.scheduling import days_to_int
 from src.core.exceptions import NotFoundException, BadRequestException
 
@@ -21,8 +22,6 @@ class VenueService:
 
     async def create(self, owner_id: int, payload: VenueIn, photo: UploadFile | None = None) -> Venue:
         photo_url = None
-        if photo:
-            photo_url = await save_image(photo, folder="venues")
 
         venue = Venue(
             owner_id=owner_id,
@@ -53,7 +52,15 @@ class VenueService:
             promotion_percentage=payload.promotion_percentage,
             status=DataStatus.new,
         )
-        return await self.venue_repo.create(venue)
+        await self.venue_repo.create(venue)
+    
+        if photo:
+            photo_url = await save_image(photo, folder="venues")
+            venue_photo = VenuePhotos(venue_id=venue.id, url=photo_url)
+            self.venue_repo.session.add(venue_photo)
+            await self.venue_repo.session.flush()
+        
+        return venue
 
     async def get_all_for_admin(self, status: DataStatus | None = None, offset: int | None = None, limit: int | None = None) -> list[Venue]:
         return await self.venue_repo.get_all(status=status, offset=offset, limit=limit)
@@ -95,6 +102,67 @@ class VenueService:
         if venue.owner_id != owner_id:
             raise BadRequestException("Bul sizge tiyisli emes")
         await self.venue_repo.delete(venue)
+
+    async def add_photo(self, venue_id: int, owner_id: int, photo: UploadFile) -> VenuePhotos:
+        venue = await self.get_one(venue_id)
+        if venue.owner_id != owner_id:
+            raise BadRequestException("Bul sizge tiyisli emes")
+
+        photo_url = await save_image(photo, folder="venues")
+        venue_photo = VenuePhotos(venue_id=venue_id, url=photo_url)
+        self.venue_repo.session.add(venue_photo)
+        await self.venue_repo.session.flush()
+        return venue_photo
+
+    async def delete_photo(self, photo_id: int, owner_id: int) -> None:
+        photo = await self.venue_repo.session.get(VenuePhotos, photo_id)
+        if photo is None:
+            raise NotFoundException("Photo not found")
+        
+        venue = await self.get_one(photo.venue_id)
+        if venue.owner_id != owner_id:
+            raise BadRequestException("Bul sizge tiyisli emes")
+    
+        delete_image(photo.url)
+        await self.venue_repo.session.delete(photo)
+        await self.venue_repo.session.flush()
+
+    async def get_one_for_guest(self, venue_id: int, user_id: int) -> dict:
+        venue = await self.get_one(venue_id)
+        if venue.status != DataStatus.approved:
+            raise NotFoundException(f"Venue with id {venue_id} not found")
+
+        visit = await self.visit_repo.get_by_user_and_venue(
+            user_id=user_id,
+            venue_id=venue_id,
+        )
+        visit_count = visit.amount if visit else 0
+    
+        venue_data = {
+            "id": venue.id,
+            "name_uz": venue.name_uz,
+            "name_ru": venue.name_ru,
+            "name_kr": venue.name_kr,
+            "description_uz": venue.description_uz,
+            "description_ru": venue.description_ru,
+            "description_kr": venue.description_kr,
+            "region": venue.region,
+            "category": venue.category,
+            "subcategory": venue.subcategory,
+            "days_of_week": venue.day_of_week,
+            "open_time": venue.open_time,
+            "close_time": venue.close_time,
+            "is_always_open": venue.is_always_open,
+            "is_closed": venue.is_closed,
+            "phone": venue.phone,
+            "address_uz": venue.address_uz,
+            "address_ru": venue.address_ru,
+            "address_kr": venue.address_kr,
+            "latitude": venue.latitude,
+            "longitude": venue.longitude,
+            "visit_count": visit_count,
+        }
+        return venue_data
 
     # ── ADMIN ──────────────────────────────────────────────────
 
@@ -154,6 +222,10 @@ class VenueService:
 
         can_give = visit.amount >= venue.visit_amount
         discount = venue.promotion_percentage if can_give else 0
+
+        if can_give:
+            visit.amount = 0
+        await self.visit_repo.session.flush()
 
         return QRScanResult(
             user_id=user_id,

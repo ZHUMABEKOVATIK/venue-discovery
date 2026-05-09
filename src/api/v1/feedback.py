@@ -17,7 +17,7 @@ async def get_all(
     ):
     return await service.get_all(venue_id=venue_id, limit=limit, offset=offset)
 
-@router.post("/", response_model=FeedbackOut)
+@router.post("/", response_model=FeedbackOut, status_code=status.HTTP_201_CREATED)
 async def create(
         payload: FeedbackIn, 
         user: CurrentUserDep, 

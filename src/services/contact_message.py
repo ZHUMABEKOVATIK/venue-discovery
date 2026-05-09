@@ -20,7 +20,7 @@ class ContactMessageService:
     async def get_by_id(self, id: int) -> ContactMessage:
         data = await self.repo.get_by_id(id)
         if data is None:
-            raise NotFoundException("Message not found!")
+            raise NotFoundException("Message not found")
         return data
     
     async def get_all(self, limit: int | None = None, offset: int | None = None, include_deleted: bool = False) -> list[ContactMessage]:
@@ -30,7 +30,7 @@ class ContactMessageService:
     async def read(self, id: int) -> ContactMessage:
         data = await self.repo.read(id)
         if data is None:
-            raise NotFoundException("Message not found!")
+            raise NotFoundException("Message not found")
         return data
     
     async def delete(self, id: int) -> None:

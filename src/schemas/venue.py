@@ -196,6 +196,7 @@ class VenueGuestOut(BaseModel):
     longitude: Decimal | None
     rating: float | None = None
     feedback_count: int | None = None
+    visit_count: int = 0
 
     model_config = ConfigDict(from_attributes=True)
 

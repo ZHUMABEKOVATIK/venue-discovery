@@ -4,7 +4,7 @@ from src.schemas.announcement import AnnouncementOut, AnnouncementGet
 from src.models.model_enums import UserRole
 from src.core.exceptions import BadRequestException
 
-router = APIRouter(prefix="/announcement")
+router = APIRouter(prefix="/announcement", tags=["Announcements"])
 
 @router.post("/", response_model=AnnouncementOut, status_code=201)
 async def create(
@@ -14,7 +14,7 @@ async def create(
     value: str = Form(...),
     description: str | None = Form(None),
 ):
-    if user.role != UserRole.owner or user.role != UserRole.admin:
+    if user.role not in (UserRole.owner, UserRole.admin):
         raise BadRequestException("Tek owner anons qosa aladi")
 
     return await service.create(

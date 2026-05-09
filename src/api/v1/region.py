@@ -9,7 +9,7 @@ router = APIRouter(prefix="/region", tags=["Regions"])
 async def get_regions(service: RegionServiceDep):
     return await service.get_all()
 
-@router.post("/", response_model=RegionOut)
+@router.post("/", response_model=RegionOut, status_code=status.HTTP_201_CREATED)
 async def create_region(payload: RegionIn, user: AdminDep, service: RegionServiceDep):
     return await service.create(payload.name)
 

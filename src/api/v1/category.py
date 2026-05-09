@@ -10,7 +10,7 @@ router = APIRouter(prefix="/categories", tags=["Categories"])
 async def get_categories(service: CategoryServiceDep):
     return await service.get_all()
 
-@router.post("/", response_model=CategoryOut)
+@router.post("/", response_model=CategoryOut, status_code=status.HTTP_201_CREATED)
 async def create_category(payload: CategoryIn, user: AdminDep, service: CategoryServiceDep):
     return await service.create(payload.name)
 

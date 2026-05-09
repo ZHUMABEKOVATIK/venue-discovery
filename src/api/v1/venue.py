@@ -32,6 +32,14 @@ async def get_venues(
         limit=limit,
     )
 
+@router.get("/{venue_id}", response_model=VenueGuestOut)
+async def get_venue(
+    venue_id: int,
+    user: CurrentUserDep,
+    service: VenueServiceDep,
+):
+    return await service.get_one_for_guest(venue_id=venue_id, user_id=user.id)
+
 # ── OWNER — создать заведение ──────────────────────────────────
 
 @router.post("/", response_model=VenueOwnerOut, status_code=status.HTTP_201_CREATED)
@@ -39,6 +47,7 @@ async def create_venue(
     user: CurrentUserDep,
     service: VenueServiceDep,
     payload: VenueIn,
+    photo: UploadFile = File(...),
 ):
     if user.role != UserRole.owner:
         raise BadRequestException("Tek owner venue qosa aladi")
@@ -53,6 +62,51 @@ async def get_my_venues(user: CurrentUserDep, service: VenueServiceDep):
         raise BadRequestException("Tek owner ushin")
     return await service.get_my_venues(owner_id=user.id)
 
+@router.get("/admin/all", response_model=list[VenueAdminOut])
+async def admin_get_all(
+    _: AdminDep,
+    service: VenueServiceDep,
+    status: DataStatus | None = Query(None),
+    offset: int | None = Query(None),
+    limit: int | None = Query(None),
+):
+    return await service.get_all_for_admin(status=status, offset=offset, limit=limit)
+
+@router.post("/scan", response_model=QRScanResult)
+async def scan_qr(
+    payload: QRScanIn,
+    user: CurrentUserDep,
+    service: VenueServiceDep,
+):
+    if user.role != UserRole.owner:
+        raise BadRequestException("Tek owner skanerlew mumkin")
+    return await service.scan_qr(
+        user_id=payload.user_id,
+        venue_id=payload.venue_id,
+        owner_id=user.id,
+    )
+
+@router.post("/{venue_id}/photos", status_code=201)
+async def add_photo(
+    venue_id: int,
+    user: CurrentUserDep,
+    service: VenueServiceDep,
+    photo: UploadFile = File(...),
+):
+    if user.role != UserRole.owner:
+        raise BadRequestException("Tek owner ushin")
+    return await service.add_photo(venue_id=venue_id, owner_id=user.id, photo=photo)
+
+@router.delete("/{venue_id}/photos/{photo_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_photo(
+    venue_id: int,
+    photo_id: int,
+    user: CurrentUserDep,
+    service: VenueServiceDep,
+):
+    if user.role != UserRole.owner:
+        raise BadRequestException("Tek owner ushin")
+    await service.delete_photo(photo_id=photo_id, owner_id=user.id)
 
 @router.patch("/{venue_id}", response_model=VenueOwnerOut)
 async def update_venue(
@@ -75,32 +129,12 @@ async def delete_venue(venue_id: int, user: CurrentUserDep, service: VenueServic
 
 # ── OWNER — сканирует QR гостя ─────────────────────────────────
 
-@router.post("/scan", response_model=QRScanResult)
-async def scan_qr(
-    payload: QRScanIn,
-    user: CurrentUserDep,
-    service: VenueServiceDep,
-):
-    if user.role != UserRole.owner:
-        raise BadRequestException("Tek owner skanerlew mumkin")
-    return await service.scan_qr(
-        user_id=payload.user_id,
-        venue_id=payload.venue_id,
-        owner_id=user.id,
-    )
+
 
 
 # ── ADMIN ──────────────────────────────────────────────────────
 
-@router.get("/admin/all", response_model=list[VenueAdminOut])
-async def admin_get_all(
-    _: AdminDep,
-    service: VenueServiceDep,
-    status: DataStatus | None = Query(None),
-    offset: int | None = Query(None),
-    limit: int | None = Query(None),
-):
-    return await service.get_all_for_admin(status=status, offset=offset, limit=limit)
+
 
 
 @router.patch("/admin/{venue_id}/review", response_model=VenueAdminOut)
@@ -114,7 +148,7 @@ async def admin_review(
 
 # ── GUEST — детальная страница заведения + QR ──────────────────
 
-@router.get("/my/{venue_id}", response_model=VenueGuestOut)
+@router.get("/{venue_id}", response_model=VenueGuestOut)
 async def get_venue(venue_id: int, service: VenueServiceDep):
     return await service.get_one(venue_id)
 

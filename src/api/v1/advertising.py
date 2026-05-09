@@ -40,7 +40,7 @@ async def update_body(
     ):
     return await service.update_body(ad_id=advert_id, title=title, description=description,category_id=category_id)
 
-@router.delete("/{advert_id}")
+@router.delete("/{advert_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(
         advert_id: int,
         user: AdminDep,
