@@ -51,7 +51,7 @@ async def create_venue(
 ):
     if user.role != UserRole.owner:
         raise BadRequestException("Tek owner venue qosa aladi")
-    return await service.create(owner_id=user.id, payload=payload)
+    return await service.create(owner_id=user.id, payload=payload, photo=photo)
 
 
 # ── OWNER — свои заведения ─────────────────────────────────────
@@ -127,11 +127,6 @@ async def delete_venue(venue_id: int, user: CurrentUserDep, service: VenueServic
     await service.delete(venue_id=venue_id, owner_id=user.id)
 
 
-# ── OWNER — сканирует QR гостя ─────────────────────────────────
-
-
-
-
 # ── ADMIN ──────────────────────────────────────────────────────
 
 
@@ -147,11 +142,6 @@ async def admin_review(
     return await service.review(venue_id=venue_id, payload=payload)
 
 # ── GUEST — детальная страница заведения + QR ──────────────────
-
-@router.get("/{venue_id}", response_model=VenueGuestOut)
-async def get_venue(venue_id: int, service: VenueServiceDep):
-    return await service.get_one(venue_id)
-
 
 @router.get("/{venue_id}/qr", response_class=StreamingResponse)
 async def get_qr(venue_id: int, user: CurrentUserDep, service: VenueServiceDep):

@@ -21,8 +21,6 @@ class VenueService:
         self.visit_repo = visit_repo
 
     async def create(self, owner_id: int, payload: VenueIn, photo: UploadFile | None = None) -> Venue:
-        photo_url = None
-
         venue = Venue(
             owner_id=owner_id,
             name_kr=payload.name_kr,
@@ -222,6 +220,7 @@ class VenueService:
 
         can_give = visit.amount >= venue.visit_amount
         discount = venue.promotion_percentage if can_give else 0
+        actual_count = visit.amount
 
         if can_give:
             visit.amount = 0
@@ -231,7 +230,7 @@ class VenueService:
             user_id=user_id,
             first_name=visit.user.first_name,
             last_name=visit.user.last_name,
-            visit_count=visit.amount,
+            visit_count=actual_count,
             visit_amount_required=venue.visit_amount,
             discount_percentage=discount,
             can_give_discount=can_give,

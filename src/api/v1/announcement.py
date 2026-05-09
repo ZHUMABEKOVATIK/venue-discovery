@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Form, status
+from fastapi import APIRouter, UploadFile, File, Form, status, Query
 from src.dependencies import CurrentUserDep, AnnouncementServiceDep, AdminDep
 from src.schemas.announcement import AnnouncementOut, AnnouncementGet
 from src.models.model_enums import UserRole
@@ -24,25 +24,38 @@ async def create(
         description=description,
     )
 
-@router.post("/filter", response_model=list[AnnouncementOut], description="Userlerdi o'zi filterleydi, admin bolsa ba'ri, user bolsa tek o'ziniki")
-async def get_all(
+@router.get("/filter", response_model=list[AnnouncementOut], description="Only for guests!")
+async def get_all_guests(
+        service: AnnouncementServiceDep,
+        offset: int | None = Query(None), 
+        limit: int | None = Query(None)
+    ):
+    return await service.get_all(
+        only_approved=True, 
+        offset=offset, 
+        limit=limit
+    )
+
+@router.post("/filter", response_model=list[AnnouncementOut], description="For owners or admins")
+async def get_all_guests(
         payload: AnnouncementGet,
         user: CurrentUserDep,
         service: AnnouncementServiceDep,
     ):
+    user_id = None
+
     if user.role == UserRole.guest:
-        return await service.get_all(
-            user_id=user.id, 
-            only_approved=payload.only_approved, 
-            offset=payload.offset, 
-            limit=payload.limit
-        )
-    else:
-        return await service.get_all(
-            only_approved=payload.only_approved, 
-            offset=payload.offset, 
-            limit=payload.limit
-        )
+        raise BadRequestException("This request can only be sent by admins or owners.")
+    
+    if user.role == UserRole.owner:
+        user_id = user.id
+    
+    return await service.get_all(
+        user_id=user_id,
+        only_approved=payload.only_approved, 
+        offset=payload.offset, 
+        limit=payload.limit
+    )
     
 @router.patch("/photo/{annons_id}", description="Fotosin o'zgertiw", response_model=AnnouncementOut)
 async def update_photo(
