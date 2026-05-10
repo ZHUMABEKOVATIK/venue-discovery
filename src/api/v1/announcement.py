@@ -37,7 +37,7 @@ async def get_all_guests(
     )
 
 @router.post("/filter", response_model=list[AnnouncementOut], description="For owners or admins")
-async def get_all_guests(
+async def get_all_owners(
         payload: AnnouncementGet,
         user: CurrentUserDep,
         service: AnnouncementServiceDep,
@@ -108,4 +108,5 @@ async def delete(
         user: CurrentUserDep,
         service: AnnouncementServiceDep,
     ):
-    await service.delete(id=annons_id, user_id=user.id)
+    is_admin = user.role == UserRole.admin
+    await service.delete(id=annons_id, user_id=user.id, is_admin=is_admin)

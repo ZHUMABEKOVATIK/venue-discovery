@@ -7,3 +7,4 @@ from .feedback import FeedbackService
 from .announcement import AnnouncementService
 from .advertising import AdvertisingService
 from .venue import VenueService
+from .session import SessionService

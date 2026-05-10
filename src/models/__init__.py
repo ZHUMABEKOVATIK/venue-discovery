@@ -9,6 +9,7 @@ from .user import User
 from .venue import Venue
 from .venue_photos import VenuePhotos
 from .venue_social_medias import VenueSocialMedias
+from .visits import Visit
 
 __all__ = (
     'Advertising',
@@ -21,5 +22,6 @@ __all__ = (
     'User',
     'Venue',
     'VenuePhotos',
-    'VenueSocialMedias'
+    'VenueSocialMedias',
+    'Visit'
 )

@@ -40,7 +40,7 @@ def verify_access_token(token: str) -> dict | None:
             return None
         return payload
     except (InvalidTokenError, ExpiredSignatureError):
-        raise HTTPException(status_code=401, detail="Token expired")
+        return None
 
 
 def verify_refresh_token(token: str) -> dict | None:
@@ -50,4 +50,4 @@ def verify_refresh_token(token: str) -> dict | None:
             return None
         return payload
     except (InvalidTokenError, ExpiredSignatureError):
-        raise HTTPException(status_code=401, detail="Token expired")
+        return None

@@ -18,5 +18,7 @@ class RefreshToken(TimeStampzMixIn):
     is_revoked: Mapped[bool] = mapped_column(Boolean, default=False)
 
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    user_agent : Mapped[str|None] = mapped_column(String(300), nullable=True)
+    ip_address : Mapped[str|None] = mapped_column(String(50), nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="refresh_tokens")

@@ -1,6 +1,5 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy import select, func
+from sqlalchemy import select
 from .base_repository import SoftDeleteRepository
 
 from src.models.contact_message import ContactMessage

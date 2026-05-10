@@ -10,6 +10,7 @@ from .feedback import get_feedback_service
 from .announcement import get_announcement_service
 from .advertising import get_advertising_service
 from .venue import get_venue_service
+from .session import get_session_service
 
 from src.models.user import User, UserRole
 
@@ -23,7 +24,8 @@ from src.services import (
     FeedbackService,
     AnnouncementService,
     AdvertisingService,
-    VenueService
+    VenueService,
+    SessionService
 )
 
 from src.core.exceptions import BadRequestException
@@ -46,3 +48,4 @@ FeedbackServiceDep = Annotated[FeedbackService, Depends(get_feedback_service)]
 AnnouncementServiceDep = Annotated[AnnouncementService, Depends(get_announcement_service)]
 AdvertisingServiceDep = Annotated[AdvertisingService, Depends(get_advertising_service)]
 VenueServiceDep = Annotated[VenueService, Depends(get_venue_service)]
+SessionServiceDep = Annotated[SessionService, Depends(get_session_service)]
