@@ -2,7 +2,7 @@ import jwt
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 from .config import settings
-
+from fastapi.exceptions import HTTPException
 
 def create_token(data: dict, expires_delta: timedelta, secret_key: str, token_type: str) -> str:
     to_encode = data.copy()
@@ -40,7 +40,7 @@ def verify_access_token(token: str) -> dict | None:
             return None
         return payload
     except (InvalidTokenError, ExpiredSignatureError):
-        return None
+        raise HTTPException(status_code=401, detail="Token expired")
 
 
 def verify_refresh_token(token: str) -> dict | None:
@@ -50,4 +50,4 @@ def verify_refresh_token(token: str) -> dict | None:
             return None
         return payload
     except (InvalidTokenError, ExpiredSignatureError):
-        return None
+        raise HTTPException(status_code=401, detail="Token expired")

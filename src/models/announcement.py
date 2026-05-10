@@ -3,9 +3,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, BigInteger, Enum as SQLEnum, Text, String
 
 from src.db.base import SoftDeleteMixIn
+from .model_enums import DataStatus
 
 if TYPE_CHECKING:
-    from .model_enums import DataStatus
     from .user import User
 
 class Announcement(SoftDeleteMixIn):

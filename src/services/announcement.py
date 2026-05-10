@@ -60,6 +60,9 @@ class AnnouncementService:
         if data.status == DataStatus.approved:
             raise BadRequestException("Qabillang'an anonsti o'zgertiw mumkin emes")
         
+        if value is None and description is None:
+            raise BadRequestException("Nothing has changed")
+
         updates = {"status": DataStatus.revision}
         
         if value is not None:

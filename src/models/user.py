@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Boolean, Enum as SQLEnum
+from .model_enums import UserRole
 
 from src.db.base import SoftDeleteMixIn
 
@@ -8,7 +9,6 @@ if TYPE_CHECKING:
     from .venue import Venue
     from .announcement import Announcement
     from .visits import Visit
-    from .model_enums import UserRole
     from .feedback import Feedback
     from .refresh import RefreshToken
 

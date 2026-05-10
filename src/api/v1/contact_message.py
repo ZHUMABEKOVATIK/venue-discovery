@@ -4,7 +4,7 @@ from src.schemas.contact_message import ContactMessageIn, ContactMessageOut
 
 from src.dependencies import ContactMessageServiceDep
 
-router = APIRouter(prefix="/contact_messages", tags=["Baylanis bo'limi"])
+router = APIRouter(prefix="/contact_messages", tags=["Contact Us"])
 
 @router.get("/", response_model=list[ContactMessageOut])
 async def get_messages(
@@ -23,7 +23,7 @@ async def get_one_message(
     ):
     return await service.get_by_id(id)
     
-@router.post("/", response_model=ContactMessageOut)
+@router.post("/", response_model=ContactMessageOut, status_code=status.HTTP_201_CREATED)
 async def create_message(
         payload: ContactMessageIn,
         service: ContactMessageServiceDep

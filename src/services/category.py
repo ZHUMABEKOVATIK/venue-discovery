@@ -1,6 +1,6 @@
 from src.repositories.category import CategoryRepo, SubCategoryRepo
 from src.models.category import Category
-from src.core import NotFoundException
+from src.core import NotFoundException, BadRequestException
 
 class CategoryService:
     def __init__(self, repo: CategoryRepo):
@@ -46,10 +46,17 @@ class SubCategoryService:
             )
         )
     
-    async def update(self, id: int, name: str) -> Category:
+    async def update(self, category_id, id: int, name: str) -> Category:
         data = await self.repo.update(id, name=name)
         if data is None:
             raise NotFoundException(f"Category with id {id} not found")
+        
+        if data.parent_id is None:
+            raise BadRequestException("It isn't Subcategory")
+        
+        if data.parent_id != category_id:
+            raise BadRequestException("Wrong category id")
+
         return data
     
     async def delete(self, id: int) -> None:

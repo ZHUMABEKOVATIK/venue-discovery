@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from src.db.base import Base
 from src.db.sessions import engine
 from .auto_admin import auto_create_admin
+from src.models import *
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

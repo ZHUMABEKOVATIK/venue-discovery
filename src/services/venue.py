@@ -112,10 +112,13 @@ class VenueService:
         await self.venue_repo.session.flush()
         return venue_photo
 
-    async def delete_photo(self, photo_id: int, owner_id: int) -> None:
+    async def delete_photo(self, venue_id: int, photo_id: int, owner_id: int) -> None:
         photo = await self.venue_repo.session.get(VenuePhotos, photo_id)
         if photo is None:
             raise NotFoundException("Photo not found")
+        
+        if photo.venue_id != venue_id:
+            raise BadRequestException("You cannot delete this photo")
         
         venue = await self.get_one(photo.venue_id)
         if venue.owner_id != owner_id:

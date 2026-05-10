@@ -3,9 +3,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String, Boolean, BigInteger, Text, Numeric, Enum as SQLEnum, Integer
 
 from src.db.base import SoftDeleteMixIn
+from .model_enums import DataStatus
 
 if TYPE_CHECKING:
-    from .model_enums import DataStatus
     from .user import User
     from .venue_social_medias import VenueSocialMedias
     from .region import Region
@@ -51,7 +51,7 @@ class Venue(SoftDeleteMixIn):
     status: Mapped[DataStatus] = mapped_column(SQLEnum(DataStatus, name="venue_status"), default=DataStatus.new)
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    visit_amount: Mapped[int] = mapped_column(Integer, default=0)
+    visit_amount: Mapped[int] = mapped_column(Integer, default=5)
     promotion_percentage: Mapped[int] = mapped_column(Integer, default=5)
 
     # Relationships
