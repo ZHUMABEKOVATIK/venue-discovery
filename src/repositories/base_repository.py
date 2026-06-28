@@ -1,8 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import TypeVar, Generic
 from sqlalchemy import select, func
+from src.db.base import IDMixIn, SoftDeleteMixIn
 
-T = TypeVar("T")
+T = TypeVar("T", bound=IDMixIn)
+SDT = TypeVar("SDT", bound=SoftDeleteMixIn)
 
 class BaseRepository(Generic[T]):
     model: type[T]
@@ -47,8 +49,8 @@ class BaseRepository(Generic[T]):
             select(func.count(self.model.id))
         )
     
-class SoftDeleteRepository(BaseRepository[T]):
-    async def update(self, id: int, **kwargs) -> T | None:
+class SoftDeleteRepository(BaseRepository[SDT]):
+    async def update(self, id: int, **kwargs) -> SDT | None:
         data = (
             await self.session.execute(
                 select(self.model)
@@ -67,11 +69,11 @@ class SoftDeleteRepository(BaseRepository[T]):
         await self.session.flush()
         return data
 
-    async def delete(self, obj: T) -> None:
+    async def delete(self, obj: SDT) -> None:
         obj.is_deleted = True
         await self.session.flush()
 
-    async def get_by_id(self, id: int) -> T | None:
+    async def get_by_id(self, id: int) -> SDT | None:
         return await self.session.scalar(
             select(self.model)
             .where(self.model.id == id)
