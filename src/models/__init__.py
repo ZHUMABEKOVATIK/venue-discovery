@@ -11,7 +11,7 @@ from .venue_photos import VenuePhotos
 from .venue_social_medias import VenueSocialMedias
 from .visits import Visit
 
-__all__ = (
+__all__ = [
     'Advertising',
     'Announcement',
     'Category',
@@ -24,4 +24,4 @@ __all__ = (
     'VenuePhotos',
     'VenueSocialMedias',
     'Visit'
-)
+]
